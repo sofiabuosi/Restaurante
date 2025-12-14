@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cantina das Massas</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- TEMA ITALIANO (Verde Predominante) --- */
+        body {
+            /* MUDANÇA: Fonte Open Sans para o texto geral */
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #006400; 
+            color: white; 
+        }
+
+        /* Títulos com fonte Cursiva/Rústica */
+        h1, h2, h3 {
+            /* MUDANÇA: Fonte Great Vibes para títulos */
+            font-family: 'Playfair Display', serif;
+            font-weight: 400; /* Fontes cursivas não precisam de negrito */
+        }
+
+        /* Hero / Cabeçalho */
+        header {
+            background: url('https://i.pinimg.com/1200x/8c/6a/82/8c6a82581a97a435f864bf0e00a1b807.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-bottom: 5px solid #CD212A;
+        }
+
+        .header-content {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 30px 50px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            color: #006400;
+        }
+
+        h1 { 
+            /* Aumentei para 5.5rem pois a cursiva parece menor */
+            font-size: 5.5rem; 
+            margin: 0 0 0 0; 
+            line-height: 1.1;
+        }
+        
+        p.slogan { 
+            font-size: 1.3rem; 
+            font-weight: 600; /* Levemente mais grosso para ler melhor na Open Sans */
+            margin: 10px 0 0 0; 
+            text-transform: uppercase; /* Fica elegante com a fonte sans-serif */
+            letter-spacing: 2px; /* Espaçamento entre letras */
+        }
+
+        /* Galeria */
+        .galeria { padding: 50px 20px; text-align: center; }
+        
+        .galeria h2 { 
+            color: white; 
+            font-size: 4rem; /* Aumentado para dar destaque na cursiva */
+            margin-bottom: 20px;
+        }
+
+        .grid-pratos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .prato-card img {
+            width: 100%;             
+            height: 300px;           
+            object-fit: cover;       
+            border-radius: 5px;
+            border: 3px solid white; 
+        }
+        
+        .prato-card p { font-size: 1.2rem; margin-top: 10px;}
+
+        .btn-reserva {
+            margin-top: 50px;
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            background-color: white; 
+            color: #006400; 
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s;
+            display: inline-block;
+            /* O botão mantém a fonte legível, não a cursiva */
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-reserva:hover { 
+            background-color: #f0f0f0; 
+            transform: scale(1.05); 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        /* --- TIRA DE INFORMAÇÕES (RODAPÉ) --- */
+        .info-strip {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 5px solid white;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .info-box { flex: 1; min-width: 250px; margin: 10px; }
+        
+        .info-box h3 { 
+            color: #00ff55; 
+            margin-bottom: 5px;
+            font-size: 2.5rem; /* Aumentado para a cursiva ficar legível */
+        }
+        
+        .info-box p { font-size: 1rem; line-height: 1.6; color: #ddd; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <h1>Cantina das Massas</h1>
+            <p class="slogan">A culinária italiana caseira</p>
+        </div>
+    </header>
+
+    <section class="galeria">
+        <h2>Nossos Pratos</h2>
+        <div class="grid-pratos">
+            <div class="prato-card">
+                <img src="https://i.pinimg.com/1200x/ec/29/77/ec29778102e2ace073e9d4db9d359f0d.jpg" alt="Lasanha e Salada">
+                <p>Saladas</p>
+            </div>
+            <div class="prato-card">
+                <img src="https://i.pinimg.com/736x/d3/1b/f7/d31bf748e7e7c09713631b5208a9a2a1.jpg" alt="Spaghetti">
+                <p>Macarrões</p>
+            </div>
+            <div class="prato-card">
+                <img src="https://i.pinimg.com/1200x/0d/31/21/0d31215526bfb0b8035397359b54d66d.jpg" alt="Tiramisu">
+                <p>Sobremesas</p>
+            </div>
+        </div>
+
+        <a href="reserva.html" class="btn-reserva">Reservar Mesa Agora</a>
+
+    </section>
+
+    <footer class="info-strip">
+        <div class="info-box">
+            <h3>Endereço</h3>
+            <p>*****</p>
+        </div>
+        <div class="info-box">
+            <h3>Horário de Funcionamento</h3>
+            <p>Terça e Quarta<br>19h às 22h</p>
+        </div>
+        <div class="info-box">
+            <h3>Contato</h3>
+            <p>*****</p>
+        </div>
+    </footer>
+
+</body>
+</html>

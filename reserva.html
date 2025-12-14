@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Mesa - Sabor Divino</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #e8f5e9; /* Verde bem claro */
+            margin: 0; padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .container-reserva {
+            background-color: white;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-top: 5px solid #006400;
+        }
+
+        h2 { text-align: center; color: #006400; margin-bottom: 10px; }
+        h3 { color: #CD212A; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; }
+        p.aviso { text-align: center; color: #666; font-style: italic; font-size: 0.9rem; margin-bottom: 30px; }
+
+        .form-grupo { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        /* Destaque para inputs focados */
+        input:focus, select:focus {
+            outline: none;
+            border-color: #006400;
+            box-shadow: 0 0 5px rgba(0, 100, 0, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #006400;
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        button:hover { background-color: #004d00; }
+        .voltar { text-align: center; margin-top: 20px; display: block; color: #666; text-decoration: none;}
+        .voltar:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="container-reserva">
+        <h2>Finalizar Reserva</h2>
+        <p class="aviso">Abertos Terça e Quarta-feira.</p>
+        
+        <form action="https://formspree.io/f/SEU_CODIGO_AQUI" method="POST">
+            
+            <input type="hidden" name="_subject" value="Nova Reserva Completa - Sabor Divino">
+
+            <h3>1. Seus Dados e Horário</h3>
+
+            <div class="form-grupo">
+                <label for="email">Seu E-mail (para confirmação):</label>
+                <input type="email" id="email" name="email_cliente" required placeholder="exemplo@gmail.com">
+            </div>
+
+            <div class="form-grupo">
+                <label for="pessoas">Número de Pessoas:</label>
+                <select id="pessoas" name="qtd_pessoas" required>
+                    <option value="1">1 Pessoa</option>
+                    <option value="2">2 Pessoas</option>
+                    <option value="3">3 Pessoas</option>
+                    <option value="4">4 Pessoas</option>
+                </select>
+            </div>
+
+            <div class="form-grupo">
+                <label for="data">Dia da Reserva:</label>
+                <input type="date" id="data" name="data_reserva" required>
+            </div>
+
+            <div class="form-grupo">
+                <label for="horario">Horário:</label>
+                <select id="horario" name="horario_reserva" required>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                </select>
+            </div>
+
+            <h3>2. Escolha seu Jantar</h3>
+
+            <div class="form-grupo">
+                <label for="salada">Salada (Entrada):</label>
+                <select id="salada" name="pedido_salada" required>
+                    <option value="" disabled selected>Escolha uma opção...</option>
+                    <option value="Caesar">Salada Caesar</option>
+                    <option value="Caprese">Salada Caprese</option>
+                </select>
+            </div>
+
+            <div class="form-grupo">
+                <label for="principal">Prato Principal:</label>
+                <select id="principal" name="pedido_principal" required>
+                    <option value="" disabled selected>Escolha uma opção...</option>
+                    <option value="Alho e Oleo">Macarrão ao Alho e Óleo</option>
+                    <option value="Tomate Tradicional">Macarrão com Molho de Tomate Tradicional</option>
+                    <option value="Molho Branco">Macarrão ao Molho Branco</option>
+                </select>
+            </div>
+
+            <div class="form-grupo">
+                <label for="sobremesa">Sobremesa:</label>
+                <select id="sobremesa" name="pedido_sobremesa" required>
+                    <option value="" disabled selected>Escolha uma opção...</option>
+                    <option value="Frutas Vermelhas">Semifredo de Frutas Vermelhas</option>
+                    <option value="Goiabada">Semifredo de Goiabada</option>
+                </select>
+            </div>
+
+            <button type="submit">Confirmar Reserva</button>
+        </form>
+
+        <a href="index.html" class="voltar">← Voltar para a página inicial</a>
+    </div>
+
+    <script>
+        // --- LÓGICA PARA BLOQUEAR DIAS DA SEMANA ---
+        
+        const inputData = document.getElementById('data');
+
+        inputData.addEventListener('change', function() {
+            const dataEscolhida = new Date(this.value + 'T12:00:00'); 
+            const diaSemana = dataEscolhida.getDay(); 
+
+            // Legenda do getDay():
+            // 0 = Domingo, 1 = Segunda, 2 = Terça, 3 = Quarta, 
+            // 4 = Quinta, 5 = Sexta, 6 = Sábado
+
+            // MUDANÇA NA LÓGICA:
+            // Agora só permite dia 2 (Terça) e dia 3 (Quarta).
+            // Se o dia for diferente de 2 E diferente de 3, bloqueia.
+            if (diaSemana !== 2 && diaSemana !== 3) {
+                alert('Desculpe! O restaurante abre de Terça a Quarta-feira.\nPor favor, escolha outra data.');
+                this.value = ''; // Limpa o campo
+            }
+        });
+    </script>
+</body>
+</html>
