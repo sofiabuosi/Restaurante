@@ -130,7 +130,17 @@
         if (dadosJSON) {
             const dados = JSON.parse(dadosJSON);
 
-            display.innerHTML = `
+            // Monta a exibição com Nome e Pronomes (se existirem)
+            let htmlConteudo = '';
+            
+            if (dados.nome) {
+                htmlConteudo += `<div class="info-item"><strong>Nome:</strong> ${dados.nome}</div>`;
+            }
+            if (dados.pronomes) {
+                htmlConteudo += `<div class="info-item"><strong>Pronomes:</strong> ${dados.pronomes}</div>`;
+            }
+
+            htmlConteudo += `
                 <div class="info-item"><strong>Data:</strong> ${formatarData(dados.data)}</div>
                 <div class="info-item"><strong>Horário:</strong> ${dados.horario}</div>
                 <div class="info-item"><strong>Pessoas:</strong> ${dados.pessoas}</div>
@@ -138,6 +148,8 @@
                 <div class="info-item"><strong>Prato:</strong> ${mapaNomes[dados.principal] || dados.principal}</div>
                 <div class="info-item"><strong>Sobremesa:</strong> ${mapaNomes[dados.sobremesa] || dados.sobremesa}</div>
             `;
+
+            display.innerHTML = htmlConteudo;
 
             verificarTempoEdicao(dados.data, dados.horario);
 
@@ -163,11 +175,10 @@
             const diferenca = dataDaReserva - agora;
             const horasFaltantes = diferenca / (1000 * 60 * 60);
 
-            // Regra: Só pode editar ou cancelar online com mais de 24h de antecedência
             if (horasFaltantes > 24) {
                 btnEditar.style.display = 'inline-block';
                 btnCancelar.style.display = 'inline-block';
-                msgTempo.innerText = "Você pode editar ou cancelar esta reserva até 24h antes do horário.";
+                msgTempo.innerText = "Você pode gerenciar esta reserva até 24h antes do horário.";
             } else {
                 btnEditar.style.display = 'none';
                 btnCancelar.style.display = 'none';
