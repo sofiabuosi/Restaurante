@@ -70,9 +70,10 @@
         <p class="aviso">Abertos Terça e Quarta-feira.</p>
         
         <form id="formReserva" action="https://formspree.io/f/mblnbprq" method="POST">
-            <input type="hidden" name="_next" value="https://cantinadasmassas.netlify.app/minha-reserva.html">
             
-            <input type="hidden" name="_subject" value="Nova Reserva - Sabor Divino">
+            <input type="hidden" name="_subject" value="Nova Reserva (Sem Email) - Sabor Divino">
+            
+            <input type="hidden" id="redirectUrl" name="_next" value="">
             
             <input type="text" name="_gotcha" style="display:none">
 
@@ -133,27 +134,35 @@
                 </select>
             </div>
 
-            <button type="submit">Confirmar Reserva</button>
+            <button type="submit" id="btnConfirmar">Confirmar Reserva</button>
         </form>
 
         <a href="index.html" class="voltar">← Voltar para a página inicial</a>
     </div>
 
     <script>
-        // 1. Bloqueio de Dias (Terça e Quarta apenas)
+        // --- 1. CONFIGURAÇÃO AUTOMÁTICA DO REDIRECIONAMENTO ---
+        // Pega o endereço atual (ex: https://seusite.netlify.app) e adiciona a página de destino
+        // Isso evita erros de domínio
+        const currentUrl = window.location.origin;
+        document.getElementById('redirectUrl').value = currentUrl + "/minha-reserva.html";
+
+        // --- 2. BLOQUEIO DE DIAS ---
         const inputData = document.getElementById('data');
         inputData.addEventListener('change', function() {
             const dataEscolhida = new Date(this.value + 'T12:00:00'); 
             const diaSemana = dataEscolhida.getDay(); 
             if (diaSemana !== 2 && diaSemana !== 3) {
-                alert('Desculpe! O restaurante abre Terça e Quarta-feira.\nPor favor, escolha outra data.');
+                alert('Desculpe! O restaurante abre de Terça a Quarta-feira.\nPor favor, escolha outra data.');
                 this.value = ''; 
             }
         });
 
-        // 2. Salvar dados no Navegador antes de enviar
+        // --- 3. SALVAR DADOS NO NAVEGADOR ---
         const form = document.getElementById('formReserva');
-        form.addEventListener('submit', function() {
+        
+        form.addEventListener('submit', function(e) {
+            // Cria o pacote de dados
             const dadosReserva = {
                 pessoas: document.getElementById('pessoas').value,
                 data: document.getElementById('data').value,
@@ -162,8 +171,11 @@
                 principal: document.getElementById('principal').value,
                 sobremesa: document.getElementById('sobremesa').value
             };
-            // Salva como um texto JSON no navegador
+            
+            // Grava na memória do navegador
             localStorage.setItem('dadosReservaSaborDivino', JSON.stringify(dadosReserva));
+            
+            // O formulário continua o envio para o Formspree logo em seguida
         });
     </script>
 </body>
