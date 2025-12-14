@@ -147,7 +147,7 @@
             const dataEscolhida = new Date(this.value + 'T12:00:00'); 
             const diaSemana = dataEscolhida.getDay(); 
             if (diaSemana !== 2 && diaSemana !== 3) {
-                alert('Desculpe! O restaurante abre de Terça a Quarta-feira.\nPor favor, escolha outra data.');
+                alert('Desculpe! O restaurante abre Terça e Quarta-feira.\nPor favor, escolha outra data.');
                 this.value = ''; 
             }
         });
