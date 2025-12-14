@@ -76,15 +76,19 @@
         <h2>Finalizar Reserva</h2>
         <p class="aviso">Abertos Terça e Quarta-feira.</p>
         
-        <form action="https://formspree.io/f/SEU_CODIGO_AQUI" method="POST">
+        <form action="https://formspree.io/f/mblnbprq" method="POST">
             
             <input type="hidden" name="_subject" value="Nova Reserva Completa - Sabor Divino">
+            
+            <input type="hidden" name="_next" value="/obrigado.html">
+            
+            <input type="text" name="_gotcha" style="display:none">
 
             <h3>1. Seus Dados e Horário</h3>
 
             <div class="form-grupo">
                 <label for="email">Seu E-mail (para confirmação):</label>
-                <input type="email" id="email" name="email_cliente" required placeholder="exemplo@gmail.com">
+                <input type="email" id="email" name="email" required placeholder="exemplo@gmail.com">
             </div>
 
             <div class="form-grupo">
