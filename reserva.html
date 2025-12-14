@@ -76,7 +76,19 @@
             <input type="hidden" name="_subject" value="Nova Reserva - Cantina das Massas">
             <input type="text" name="_gotcha" style="display:none">
 
-            <h3>1. Dados da Reserva</h3>
+            <h3>1. Seus Dados</h3>
+            
+            <div class="form-grupo">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="nome_cliente" placeholder="Ex: Maria Silva" required>
+            </div>
+
+            <div class="form-grupo">
+                <label for="pronomes">Pronomes (Opcional):</label>
+                <input type="text" id="pronomes" name="pronomes_cliente" placeholder="Ex: Ela/Dela, Ele/Dele, Elu/Delu">
+            </div>
+
+            <h3>2. Detalhes da Reserva</h3>
 
             <div class="form-grupo">
                 <label for="pessoas">Número de Pessoas:</label>
@@ -103,7 +115,7 @@
                 </select>
             </div>
 
-            <h3>2. Escolha seu Jantar</h3>
+            <h3>3. Escolha seu Jantar</h3>
 
             <div class="form-grupo">
                 <label for="salada">Salada (Entrada):</label>
@@ -156,14 +168,15 @@
         const btn = document.getElementById('btnConfirmar');
         
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // 🛑 IMPEDE o envio normal do formulário
+            e.preventDefault(); 
 
-            // Muda o botão para a pessoa saber que está enviando
             btn.innerText = "Processando...";
             btn.disabled = true;
 
-            // A. Salva os dados na memória do navegador AGORA
+            // A. Salva TUDO na memória do navegador AGORA (Incluindo Nome e Pronomes)
             const dadosReserva = {
+                nome: document.getElementById('nome').value,
+                pronomes: document.getElementById('pronomes').value,
                 pessoas: document.getElementById('pessoas').value,
                 data: document.getElementById('data').value,
                 horario: document.getElementById('horario').value,
@@ -173,7 +186,7 @@
             };
             localStorage.setItem('dadosReservaSaborDivino', JSON.stringify(dadosReserva));
 
-            // B. Envia os dados para o Formspree via JavaScript (AJAX)
+            // B. Envia os dados para o Formspree
             const formData = new FormData(form);
             
             fetch("https://formspree.io/f/mblnbprq", {
@@ -184,7 +197,6 @@
                 }
             }).then(response => {
                 if (response.ok) {
-                    // C. Se o Formspree recebeu com sucesso, aí sim mudamos de página
                     window.location.href = "minha-reserva.html";
                 } else {
                     alert("Ocorreu um erro no envio. Tente novamente.");
