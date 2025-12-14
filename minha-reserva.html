@@ -63,14 +63,21 @@
             cursor: pointer;
             border: none;
             font-family: 'Helvetica', sans-serif;
+            font-size: 1rem;
         }
 
         .btn-voltar { background-color: #333; color: white; }
-        .btn-editar { background-color: #CD212A; color: white; display: none; }
         
-        /* CORREÇÃO DE COR AQUI: Mudado para #555 (Cinza Escuro) */
+        /* Botão Editar (Azul) */
+        .btn-editar { background-color: #0056b3; color: white; display: none; }
+        .btn-editar:hover { background-color: #004494; }
+
+        /* Botão Cancelar (Vermelho) */
+        .btn-cancelar { background-color: #CD212A; color: white; display: none; }
+        .btn-cancelar:hover { background-color: #a01a21; }
+        
         .aviso-tempo { 
-            font-size: 0.9rem; /* Aumentei levemente também */
+            font-size: 0.9rem; 
             color: #555; 
             margin-top: 15px; 
             font-style: italic; 
@@ -81,8 +88,8 @@
 <body>
 
     <div class="card">
-        <h1>Reserva Confirmada!</h1>
-        <h2>Aqui estão os detalhes do seu pedido:</h2>
+        <h1 id="tituloPagina">Reserva Confirmada!</h1>
+        <h2 id="subtituloPagina">Aqui estão os detalhes do seu pedido:</h2>
 
         <div class="info-box" id="detalhes">
             <p style="text-align:center">Carregando dados...</p>
@@ -90,6 +97,10 @@
 
         <button onclick="editarReserva()" class="btn btn-editar" id="btnEditar">
             Editar Reserva
+        </button>
+
+        <button onclick="cancelarReserva()" class="btn btn-cancelar" id="btnCancelar">
+            Cancelar Reserva
         </button>
         
         <p id="msgTempo" class="aviso-tempo"></p>
@@ -111,7 +122,10 @@
         const dadosJSON = localStorage.getItem('dadosReservaSaborDivino');
         const display = document.getElementById('detalhes');
         const btnEditar = document.getElementById('btnEditar');
+        const btnCancelar = document.getElementById('btnCancelar');
         const msgTempo = document.getElementById('msgTempo');
+        const titulo = document.getElementById('tituloPagina');
+        const subtitulo = document.getElementById('subtituloPagina');
 
         if (dadosJSON) {
             const dados = JSON.parse(dadosJSON);
@@ -128,7 +142,13 @@
             verificarTempoEdicao(dados.data, dados.horario);
 
         } else {
-            display.innerHTML = "<p>Nenhuma reserva encontrada neste dispositivo.</p>";
+            // Estado Sem Reserva
+            titulo.innerText = "Sem Reservas";
+            titulo.style.fontSize = "2rem";
+            subtitulo.innerText = "";
+            display.innerHTML = "<p style='text-align:center'>Nenhuma reserva encontrada neste dispositivo.</p>";
+            btnEditar.style.display = 'none';
+            btnCancelar.style.display = 'none';
         }
 
         function formatarData(dataAmericana) {
@@ -143,17 +163,28 @@
             const diferenca = dataDaReserva - agora;
             const horasFaltantes = diferenca / (1000 * 60 * 60);
 
+            // Regra: Só pode editar ou cancelar online com mais de 24h de antecedência
             if (horasFaltantes > 24) {
                 btnEditar.style.display = 'inline-block';
-                msgTempo.innerText = "Você pode editar esta reserva até 24h antes do horário.";
+                btnCancelar.style.display = 'inline-block';
+                msgTempo.innerText = "Você pode editar ou cancelar esta reserva até 24h antes do horário.";
             } else {
                 btnEditar.style.display = 'none';
-                msgTempo.innerText = "Não é mais possível editar online (menos de 24h). Ligue para nós.";
+                btnCancelar.style.display = 'none';
+                msgTempo.innerText = "Faltam menos de 24h. Para alterações ou cancelamentos, por favor, ligue para nós.";
             }
         }
 
         function editarReserva() {
             window.location.href = "reserva.html";
+        }
+
+        function cancelarReserva() {
+            if (confirm("Tem certeza que deseja cancelar sua reserva? Esta ação não pode ser desfeita.")) {
+                localStorage.removeItem('dadosReservaSaborDivino');
+                alert("Sua reserva foi removida do dispositivo.");
+                window.location.reload();
+            }
         }
     </script>
 
