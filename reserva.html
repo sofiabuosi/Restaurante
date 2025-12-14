@@ -59,6 +59,8 @@
         }
 
         button:hover { background-color: #004d00; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        
         .voltar { text-align: center; margin-top: 20px; display: block; color: #666; text-decoration: none;}
         .voltar:hover { text-decoration: underline; }
     </style>
@@ -69,12 +71,9 @@
         <h2>Fazer Nova Reserva</h2>
         <p class="aviso">Abertos Terça e Quarta-feira.</p>
         
-        <form id="formReserva" action="https://formspree.io/f/mblnbprq" method="POST">
+        <form id="formReserva">
             
             <input type="hidden" name="_subject" value="Nova Reserva (Sem Email) - Sabor Divino">
-            
-            <input type="hidden" id="redirectUrl" name="_next" value="">
-            
             <input type="text" name="_gotcha" style="display:none">
 
             <h3>1. Dados da Reserva</h3>
@@ -141,13 +140,7 @@
     </div>
 
     <script>
-        // --- 1. CONFIGURAÇÃO AUTOMÁTICA DO REDIRECIONAMENTO ---
-        // Pega o endereço atual (ex: https://seusite.netlify.app) e adiciona a página de destino
-        // Isso evita erros de domínio
-        const currentUrl = window.location.origin;
-        document.getElementById('redirectUrl').value = currentUrl + "/minha-reserva.html";
-
-        // --- 2. BLOQUEIO DE DIAS ---
+        // 1. Bloqueio de Dias
         const inputData = document.getElementById('data');
         inputData.addEventListener('change', function() {
             const dataEscolhida = new Date(this.value + 'T12:00:00'); 
@@ -158,11 +151,18 @@
             }
         });
 
-        // --- 3. SALVAR DADOS NO NAVEGADOR ---
+        // 2. ENVIO SEGURO E SALVAMENTO DE DADOS
         const form = document.getElementById('formReserva');
+        const btn = document.getElementById('btnConfirmar');
         
         form.addEventListener('submit', function(e) {
-            // Cria o pacote de dados
+            e.preventDefault(); // 🛑 IMPEDE o envio normal do formulário
+
+            // Muda o botão para a pessoa saber que está enviando
+            btn.innerText = "Processando...";
+            btn.disabled = true;
+
+            // A. Salva os dados na memória do navegador AGORA
             const dadosReserva = {
                 pessoas: document.getElementById('pessoas').value,
                 data: document.getElementById('data').value,
@@ -171,11 +171,31 @@
                 principal: document.getElementById('principal').value,
                 sobremesa: document.getElementById('sobremesa').value
             };
-            
-            // Grava na memória do navegador
             localStorage.setItem('dadosReservaSaborDivino', JSON.stringify(dadosReserva));
+
+            // B. Envia os dados para o Formspree via JavaScript (AJAX)
+            const formData = new FormData(form);
             
-            // O formulário continua o envio para o Formspree logo em seguida
+            fetch("https://formspree.io/f/mblnbprq", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // C. Se o Formspree recebeu com sucesso, aí sim mudamos de página
+                    window.location.href = "minha-reserva.html";
+                } else {
+                    alert("Ocorreu um erro no envio. Tente novamente.");
+                    btn.innerText = "Confirmar Reserva";
+                    btn.disabled = false;
+                }
+            }).catch(error => {
+                alert("Erro de conexão. Verifique sua internet.");
+                btn.innerText = "Confirmar Reserva";
+                btn.disabled = false;
+            });
         });
     </script>
 </body>
