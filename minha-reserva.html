@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Reserva - Sabor Divino</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Georgia', serif;
             background-color: #006400; /* Verde Fundo */
             color: white;
             display: flex;
@@ -29,8 +28,15 @@
             text-align: center;
         }
 
-        h1 { font-family: 'Great Vibes', cursive; font-size: 3.5rem; margin: 0; color: #006400; }
-        h2 { font-size: 1.2rem; margin-bottom: 30px; color: #666; }
+        h1 { 
+            font-family: 'Georgia', serif; 
+            font-style: italic;
+            font-size: 3rem; 
+            margin: 0; 
+            color: #006400; 
+        }
+        
+        h2 { font-size: 1.1rem; margin-bottom: 30px; color: #666; font-family: 'Helvetica', sans-serif; }
 
         .info-box {
             text-align: left;
@@ -39,6 +45,7 @@
             border-radius: 5px;
             margin-bottom: 20px;
             border-left: 5px solid #006400;
+            font-family: 'Helvetica', sans-serif;
         }
 
         .info-item { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
@@ -55,12 +62,19 @@
             margin-top: 10px;
             cursor: pointer;
             border: none;
+            font-family: 'Helvetica', sans-serif;
         }
 
         .btn-voltar { background-color: #333; color: white; }
-        .btn-editar { background-color: #CD212A; color: white; display: none; /* Começa invisível */ }
+        .btn-editar { background-color: #CD212A; color: white; display: none; }
         
-        .aviso-tempo { font-size: 0.8rem; color: #888; margin-top: 10px; font-style: italic; }
+        /* CORREÇÃO DE COR AQUI: Mudado para #555 (Cinza Escuro) */
+        .aviso-tempo { 
+            font-size: 0.9rem; /* Aumentei levemente também */
+            color: #555; 
+            margin-top: 15px; 
+            font-style: italic; 
+        }
 
     </style>
 </head>
@@ -75,15 +89,25 @@
         </div>
 
         <button onclick="editarReserva()" class="btn btn-editar" id="btnEditar">
-            ✏️ Editar Reserva
+            Editar Reserva
         </button>
+        
         <p id="msgTempo" class="aviso-tempo"></p>
 
         <a href="index.html" class="btn btn-voltar">Voltar ao Início</a>
     </div>
 
     <script>
-        // 1. Recuperar dados do LocalStorage
+        const mapaNomes = {
+            "Caesar": "Salada Caesar",
+            "Caprese": "Salada Caprese",
+            "Alho e Oleo": "Macarrão ao Alho e Óleo",
+            "Tomate Tradicional": "Macarrão com Molho de Tomate Tradicional",
+            "Molho Branco": "Macarrão ao Molho Branco",
+            "Frutas Vermelhas": "Semifredo de Frutas Vermelhas",
+            "Goiabada": "Semifredo de Goiabada"
+        };
+
         const dadosJSON = localStorage.getItem('dadosReservaSaborDivino');
         const display = document.getElementById('detalhes');
         const btnEditar = document.getElementById('btnEditar');
@@ -92,57 +116,43 @@
         if (dadosJSON) {
             const dados = JSON.parse(dadosJSON);
 
-            // Montar o HTML com os dados
             display.innerHTML = `
                 <div class="info-item"><strong>Data:</strong> ${formatarData(dados.data)}</div>
                 <div class="info-item"><strong>Horário:</strong> ${dados.horario}</div>
                 <div class="info-item"><strong>Pessoas:</strong> ${dados.pessoas}</div>
-                <div class="info-item"><strong>Salada:</strong> ${dados.salada}</div>
-                <div class="info-item"><strong>Prato:</strong> ${dados.principal}</div>
-                <div class="info-item"><strong>Sobremesa:</strong> ${dados.sobremesa}</div>
+                <div class="info-item"><strong>Salada:</strong> ${mapaNomes[dados.salada] || dados.salada}</div>
+                <div class="info-item"><strong>Prato:</strong> ${mapaNomes[dados.principal] || dados.principal}</div>
+                <div class="info-item"><strong>Sobremesa:</strong> ${mapaNomes[dados.sobremesa] || dados.sobremesa}</div>
             `;
 
-            // 2. Lógica das 24 Horas
             verificarTempoEdicao(dados.data, dados.horario);
 
         } else {
             display.innerHTML = "<p>Nenhuma reserva encontrada neste dispositivo.</p>";
         }
 
-        // Função auxiliar para formatar data (ano-mes-dia para dia/mes/ano)
         function formatarData(dataAmericana) {
+            if(!dataAmericana) return "";
             const partes = dataAmericana.split('-');
             return `${partes[2]}/${partes[1]}/${partes[0]}`;
         }
 
-        // Função que calcula se pode editar
         function verificarTempoEdicao(dataReserva, horaReserva) {
-            // Cria objeto Data com o dia e hora da reserva
             const dataDaReserva = new Date(`${dataReserva}T${horaReserva}:00`);
             const agora = new Date();
-
-            // Diferença em milissegundos
             const diferenca = dataDaReserva - agora;
-
-            // Converter para horas (milissegundos / 1000 / 60 / 60)
             const horasFaltantes = diferenca / (1000 * 60 * 60);
 
             if (horasFaltantes > 24) {
-                // Se falta mais de 24h, mostra o botão
                 btnEditar.style.display = 'inline-block';
                 msgTempo.innerText = "Você pode editar esta reserva até 24h antes do horário.";
             } else {
-                // Se falta menos de 24h (ou já passou)
                 btnEditar.style.display = 'none';
                 msgTempo.innerText = "Não é mais possível editar online (menos de 24h). Ligue para nós.";
             }
         }
 
-        // Função para voltar e editar
         function editarReserva() {
-            // Redireciona de volta para o formulário
-            // Nota: O Formspree vai receber um *novo* email.
-            // Cabe a você, dono do restaurante, ver que é o mesmo nome/data e atualizar.
             window.location.href = "reserva.html";
         }
     </script>
